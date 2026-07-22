@@ -8,6 +8,7 @@ import {
 import { VideoFile } from './shared/types';
 import { DownloadSelection } from '../shared/models/DownloadSelection';
 import { DownloadHistoryItem } from '../shared/models/DownloadHistoryItem';
+import { ThemeSetting } from '@/shared/models/ThemeSettings';
 
 function subscribe<T>(
   channel: string,
@@ -27,6 +28,22 @@ function subscribe<T>(
 contextBridge.exposeInMainWorld('electron', {
   app: {
     getVersion: () => ipcRenderer.invoke('app:getVersion'),
+  },
+
+  settings: {
+    get: () => ipcRenderer.invoke('settings:get'),
+
+    setOutputFolder: (outputFolder: string) =>
+      ipcRenderer.invoke('settings:setOutputFolder', outputFolder),
+
+    getTheme: () => ipcRenderer.invoke('settings:getTheme'),
+
+    setTheme: (theme: ThemeSetting) =>
+      ipcRenderer.invoke('settings:setTheme', theme),
+
+    onSystemThemeChange: (callback: (theme: 'light' | 'dark') => void) => {
+      return subscribe('system-theme-changed', callback);
+    },
   },
 
   downloader: {
@@ -72,11 +89,11 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.invoke('downloader:ffmpeg:getProbeVersion'),
     },
 
-    settings: {
-      get: () => ipcRenderer.invoke('downloader:settings:get'),
-      setOutputFolder: (outputFolder: string) =>
-        ipcRenderer.invoke('downloader:settings:setOutputFolder', outputFolder),
-    },
+    // settings: {
+    //   get: () => ipcRenderer.invoke('downloader:settings:get'),
+    //   setOutputFolder: (outputFolder: string) =>
+    //     ipcRenderer.invoke('downloader:settings:setOutputFolder', outputFolder),
+    // },
 
     history: {
       get: () => ipcRenderer.invoke('downloader:history:get'),

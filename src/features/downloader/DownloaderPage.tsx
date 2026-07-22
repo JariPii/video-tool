@@ -47,7 +47,7 @@ const DownloaderPage = () => {
 
   useEffect(() => {
     async function loadSettings() {
-      const settings = await window.electron.downloader.settings.get();
+      const settings = await window.electron.settings.get();
 
       setOutputFolder(settings.outputFolder);
 
@@ -120,7 +120,7 @@ const DownloaderPage = () => {
     }
 
     setOutputFolder(folder);
-    await window.electron.downloader.settings.setOutputFolder(folder);
+    await window.electron.settings.setOutputFolder(folder);
   }
 
   function buildSelection(

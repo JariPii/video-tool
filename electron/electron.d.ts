@@ -9,6 +9,7 @@ import { DownloadHistoryItem } from '../shared/models/DownloadHistoryItem';
 import { DownloadSelection } from '../shared/models/DownloadSelection';
 import { PlaylistInfo } from '../shared/models/PlaylistInfo';
 import { VideoFile } from '@/src/features/editor/shared/types';
+import { ThemeSetting } from '@/shared/models/ThemeSettings';
 
 export {};
 
@@ -17,6 +18,23 @@ declare global {
     electron: {
       app: {
         getVersion(): Promise<string>;
+      };
+
+      settings: {
+        get(): Promise<{
+          outputFolder: string;
+          theme: ThemeSetting;
+        }>;
+
+        setOutputFolder(outputFolder: string): Promise<void>;
+
+        getTheme(): Promise<ThemeSetting>;
+
+        setTheme(theme: ThemeSetting): Promise<void>;
+
+        onSystemThemeChange(
+          callback: (theme: 'light' | 'dark') => void,
+        ): () => void;
       };
 
       downloader: {
@@ -48,12 +66,12 @@ declare global {
           getProbeVersion(): Promise<string>;
         };
 
-        settings: {
-          get(): Promise<{
-            outputFolder: string;
-          }>;
-          setOutputFolder(outputFolder: string): Promise<void>;
-        };
+        // settings: {
+        //   get(): Promise<{
+        //     outputFolder: string;
+        //   }>;
+        //   setOutputFolder(outputFolder: string): Promise<void>;
+        // };
 
         history: {
           get: () => Promise<DownloadHistoryItem[]>;

@@ -4,8 +4,17 @@ import { useEffect, useState } from 'react';
 import { editorStore } from '../features/editor/lib/editor.store';
 import DownloaderPage from '../features/downloader/DownloaderPage';
 import VideoEditor from '../features/editor/VideoEditor';
+// import ThemeSelector from '@/components/theme/ThemeSelector';
+import dynamic from 'next/dynamic';
 
 type Tab = 'downloader' | 'editor';
+
+const ThemeSelector = dynamic(
+  () => import('@/components/theme/ThemeSelector'),
+  {
+    ssr: false,
+  },
+);
 
 const Home = () => {
   const [activeTab, setActiveTab] = useState<Tab>('downloader');
@@ -42,6 +51,7 @@ const Home = () => {
           </div>
         </div>
       </nav>
+      <ThemeSelector />
       <main className='flex-1'>
         {activeTab === 'downloader' && <DownloaderPage />}
         {activeTab === 'editor' && <VideoEditor />}
